@@ -3,31 +3,32 @@ const trainingTime = 200;
 let groupeAstronauts = [];
 let groupeAstronauts1 = [];
 
-const createCosmonauts = new Promise((resolve, reject) => {
+const createAustranauts = new Promise((resolve, reject) => {
     const newAstronauts = [{
-            name: 'Bob',
-            time: 0,
-            result: '',
-        },
-        {
-            name: 'Den',
-            time: 0,
-            result: '',
-        },
-        {
-            name: 'Ket',
-            time: 0,
-            result: '',
-        }
-    ]
-    if (newAstronauts.length > 0 && Array.isArray(groupeAstronauts)) {
-        newAstronauts.forEach(element => {
-            groupeAstronauts.push(element);
-        })
-        resolve();
-    } else {
-        reject(console.error("Error data - createCosmonauts"));
-    }
+                name: 'Bob',
+                time: 0,
+                result: '',
+            },
+            {
+                name: 'Den',
+                time: 0,
+                result: '',
+            },
+            {
+                name: 'Ket',
+                time: 0,
+                result: '',
+            }
+        ]
+        // if (newAstronauts.length > 0 && Array.isArray(groupeAstronauts)) {
+        //     newAstronauts.forEach(element => {
+        //         groupeAstronauts.push(element);
+        //     })
+        //     resolve();
+        // } else {
+        //     reject(console.error("Error data - createCosmonauts"));
+        // }
+    resolve(newAstronauts);
 })
 
 function traning(astronaut, time) {
@@ -44,7 +45,7 @@ function isHero(astronaut, time) {
     }
 }
 
-const fullCourse = new Promise((resolve, reject) => {
+/*fullCourseForGroupe = new Promise((resolve, reject) => {
     if (groupeAstronauts.length > 0) {
         for (let i = 0; i < maxSpendedTime / trainingTime; ++i) {
             groupeAstronauts.forEach(astronaut => {
@@ -52,29 +53,62 @@ const fullCourse = new Promise((resolve, reject) => {
                 isHero(astronaut, maxSpendedTime);
             });
         }
-        resolve();
+        resolve(groupeAstronauts);
     } else {
         reject(console.log('Error data - fullCourse'));
     }
-})
+})*/
 
 const showAstronauts = new Promise((resolve, reject) => {
-    if (groupeAstronauts.length > 0) {
-        groupeAstronauts.forEach(astonaut => {
-            console.log(astonaut.name, astonaut.time, astonaut.result);
-            resolve();
-        })
-    } else {
-        reject(console.log("Error data - showAstronauts"));
-    }
+    // if (groupeAstronauts.length > 0) {
+    //     groupeAstronauts.forEach(astonaut => {
+    //         console.log(astonaut.name, astonaut.time, astonaut.result);
+    //         resolve();
+    //     })
+    // } else {
+    //     reject(console.log("Error data - showAstronauts"));
+    // }
 })
+
+function fullCourse(groupeAstronauts) {
+    if (groupeAstronauts.length > 0) {
+        for (let i = 0; i < maxSpendedTime / trainingTime; ++i) {
+            groupeAstronauts.forEach(astronaut => {
+                traning(astronaut, trainingTime);
+                isHero(astronaut, maxSpendedTime);
+            });
+        }
+    }
+}
+
+function showResult(astronauts) {
+    astronauts.forEach(astonaut => {
+        console.log(astonaut.name, astonaut.time, astonaut.result);
+    })
+}
 
 console.log('=========================================================');
 
-const promises = [createCosmonauts, fullCourse, showAstronauts];
+createAustranauts.then(austronauts => {
+    console.log('first promise');
+    return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                fullCourse(austronauts);
+                resolve(austronauts);
+            }, 2000)
+        })
+        .then(austronauts => {
+            console.log('second promise')
+            setTimeout(() => {
+                showResult(austronauts)
+            }, 2000)
+        })
+})
 
-const resultReq = Promise.allSettled(promises).then(
-    (promises) => promises.forEach(promise => {
-        console.log(promise.status);
-    })
-);
+// const promises = [createAustranauts, fullCourse, showAstronauts];
+
+// const resultReq = Promise.allSettled(promises).then(
+//     (promises) => promises.forEach(promise => {
+//         console.log(promise.status);
+//     })
+// );
